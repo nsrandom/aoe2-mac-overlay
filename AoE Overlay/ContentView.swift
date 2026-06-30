@@ -137,30 +137,6 @@ struct BuildStepView: View {
     }
 }
 
-struct CounterBadge: View {
-    let unit: String
-    let counter: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(unit)
-                .font(.system(size: 10))
-                .foregroundColor(.gray)
-            Text(counter)
-                .font(.system(size: 11, weight: .bold))
-                .foregroundColor(.white)
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 6)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white.opacity(0.03))
-        .cornerRadius(6)
-        .overlay(
-            RoundedRectangle(cornerRadius: 6)
-                .stroke(Color.white.opacity(0.08), lineWidth: 1)
-        )
-    }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
