@@ -22,72 +22,28 @@ struct ContentView: View {
         "Click up to Imperial Age"
     ]
     @State private var currentStepIndex = 3 // Starting step for demonstration
+    @State private var showMatchup = true
     
     var body: some View {
         VStack(spacing: 16) {
             // Header Bar
-            HeaderView(buildSteps: buildSteps, currentStepIndex: $currentStepIndex)
+            HeaderView(buildSteps: buildSteps, currentStepIndex: $currentStepIndex, showMatchup: $showMatchup)
             
             Divider()
                 .background(Color.white.opacity(0.15))
             
-            // Match Players info
-            VStack(spacing: 8) {
-                HStack {
-                    HStack(spacing: 6) {
-                        Circle()
-                            .fill(Color.blue)
-                            .frame(width: 8, height: 8)
-                        Text("You (\(activeCiv))")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                    }
-                    Spacer()
-                    Text("ELO: \(playerElo)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
-                
-                HStack {
-                    HStack(spacing: 6) {
-                        Circle()
-                            .fill(Color.red)
-                            .frame(width: 8, height: 8)
-                        Text("Opponent (\(opponentCiv))")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                    }
-                    Spacer()
-                    Text("ELO: \(opponentElo)")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
+            if showMatchup {
+                // Match Players info
+                MatchupView(
+                    activeCiv: activeCiv,
+                    playerElo: playerElo,
+                    opponentCiv: opponentCiv,
+                    opponentElo: opponentElo
+                )
             }
-            .padding(10)
-            .background(Color.white.opacity(0.05))
-            .cornerRadius(8)
             
             // Checklist Area
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Tactical Build Steps")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color(red: 0.85, green: 0.65, blue: 0.2))
-                    .textCase(.uppercase)
-                
-                ForEach(0..<buildSteps.count, id: \.self) { index in
-                    BuildStepView(
-                        title: buildSteps[index],
-                        isDone: index < currentStepIndex,
-                        isCurrent: index == currentStepIndex
-                    )
-                }
-            }
-            .padding(10)
-            .background(Color.white.opacity(0.05))
-            .cornerRadius(8)
+            BuildStepsView(buildSteps: buildSteps, currentStepIndex: currentStepIndex)
         }
         .padding(18)
         .frame(width: 320)
@@ -114,29 +70,6 @@ struct ContentView: View {
         )
     }
 }
-
-struct BuildStepView: View {
-    let title: String
-    let isDone: Bool
-    var isCurrent: Bool = false
-    
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: isDone ? "checkmark.circle.fill" : (isCurrent ? "arrow.right.circle.fill" : "circle"))
-                .foregroundColor(isDone ? Color.green : (isCurrent ? Theme.primaryGold : Color.gray))
-                .font(.system(size: Theme.buildStepIconSize))
-            
-            Text(title)
-                .font(.caption)
-                .strikethrough(isDone)
-                .foregroundColor(isDone ? .gray : (isCurrent ? .white : .gray.opacity(0.8)))
-                .fontWeight(isCurrent ? .medium : .regular)
-            
-            Spacer()
-        }
-    }
-}
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

@@ -12,6 +12,7 @@ struct HeaderView: View {
     
     let buildSteps: [String]
     @Binding var currentStepIndex: Int
+    @Binding var showMatchup: Bool
     
     var body: some View {
         HStack {
@@ -31,6 +32,17 @@ struct HeaderView: View {
                     openWindow(id: "settings")
                 }) {
                     Image(systemName: "gearshape")
+                        .font(.system(size: Theme.iconButtonSize, weight: .bold))
+                        .foregroundColor(Theme.primaryGold)
+                        .padding(8)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                
+                Button(action: {
+                    showMatchup.toggle()
+                }) {
+                    Image(systemName: showMatchup ? "person.2.slash" : "person.2")
                         .font(.system(size: Theme.iconButtonSize, weight: .bold))
                         .foregroundColor(Theme.primaryGold)
                         .padding(8)
@@ -98,7 +110,8 @@ struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
         HeaderView(
             buildSteps: ["Step 1", "Step 2"],
-            currentStepIndex: .constant(0)
+            currentStepIndex: .constant(0),
+            showMatchup: .constant(true)
         )
         .padding()
         .background(Color(red: 0.08, green: 0.08, blue: 0.12))
