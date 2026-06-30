@@ -94,13 +94,16 @@ struct BuildStepRow: View {
     let isDone: Bool
     let isCurrent: Bool
     
+    @AppStorage("buildStepsIconSize") private var iconSize: Double = 18.0
+    @AppStorage("buildStepsTextSize") private var textSize: Double = 12.0
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .top, spacing: 8) {
                 // Status Checkmark / Arrow indicator
                 Image(systemName: isDone ? "checkmark.circle.fill" : (isCurrent ? "arrow.right.circle.fill" : "circle"))
                     .foregroundColor(isDone ? Color.green : (isCurrent ? Theme.primaryGold : Color.gray))
-                    .font(.system(size: Theme.buildStepIconSize))
+                    .font(.system(size: CGFloat(iconSize)))
                     .padding(.top, 2)
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -113,7 +116,7 @@ struct BuildStepRow: View {
                         }
                     } else {
                         Text("Villager Count: \(step.villagerCount)")
-                            .font(.caption)
+                            .font(.system(size: CGFloat(textSize)))
                             .foregroundColor(isDone ? .gray : (isCurrent ? .white : .gray.opacity(0.8)))
                     }
                     
@@ -126,7 +129,7 @@ struct BuildStepRow: View {
                 
                 // Population Counter badge
                 Text("\(step.villagerCount)")
-                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    .font(.system(size: CGFloat(max(8, textSize - 2)), weight: .bold, design: .monospaced))
                     .foregroundColor(isCurrent ? .white : .gray)
                     .padding(.horizontal, 5)
                     .padding(.vertical, 2)

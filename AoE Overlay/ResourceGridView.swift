@@ -26,11 +26,14 @@ private struct ResourceItemView: View {
     let count: Int
     let name: String
     
+    @AppStorage("buildStepsIconSize") private var iconSize: Double = 18.0
+    @AppStorage("buildStepsTextSize") private var textSize: Double = 12.0
+    
     var body: some View {
         HStack(spacing: 4) {
-            CachedImage(path: iconPath, width: 14, height: 14)
+            CachedImage(path: iconPath, width: CGFloat(iconSize), height: CGFloat(iconSize))
             Text("\(count)")
-                .font(.caption)
+                .font(.system(size: CGFloat(textSize)))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
         }

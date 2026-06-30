@@ -10,6 +10,9 @@ import SwiftUI
 struct RichTextView: View {
     let note: String
     
+    @AppStorage("buildStepsIconSize") private var iconSize: Double = 18.0
+    @AppStorage("buildStepsTextSize") private var textSize: Double = 12.0
+    
     @State private var loadedImages: [String: NSImage] = [:]
     @State private var parsedSegments: [Segment] = []
     
@@ -20,12 +23,16 @@ struct RichTextView: View {
     
     var body: some View {
         richText
-            .font(.caption)
+            .font(.system(size: CGFloat(textSize)))
             .foregroundColor(.white)
             .onAppear {
                 parseAndLoad()
             }
             .onChange(of: note) { _ in
+                parseAndLoad()
+            }
+            .onChange(of: iconSize) { _ in
+                loadedImages.removeAll()
                 parseAndLoad()
             }
     }
@@ -74,8 +81,8 @@ struct RichTextView: View {
                     if let localURL = await AssetManager.shared.fetchAsset(path: path) {
                         let nsImage = await Task.detached(priority: .userInitiated) { () -> NSImage? in
                             guard let img = NSImage(contentsOf: localURL) else { return nil }
-                            // Force resize to match line height (14pt)
-                            img.size = NSSize(width: 14, height: 14)
+                            // Force resize to match user configured size
+                            img.size = NSSize(width: CGFloat(iconSize), height: CGFloat(iconSize))
                             return img
                         }.value
                         
