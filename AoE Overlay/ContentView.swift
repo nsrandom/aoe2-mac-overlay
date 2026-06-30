@@ -130,12 +130,12 @@ struct ContentView: View {
         .padding(18)
         .frame(width: 320)
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 8)
                 .fill(Color(red: 0.08, green: 0.08, blue: 0.12).opacity(0.85))
                 .shadow(color: .black.opacity(0.4), radius: 10, x: 0, y: 5)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 8)
                 .stroke(
                     LinearGradient(
                         colors: [

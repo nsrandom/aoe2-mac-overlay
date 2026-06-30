@@ -45,11 +45,23 @@ struct WindowConfigurationModifier: ViewModifier {
                 window.alphaValue = CGFloat(windowOpacity)
                 
                 // Enable shadow for the custom window shape
-                window.hasShadow = true
+                window.hasShadow = false
+                
+                // Remove the titlebar separator line and extend content under the titlebar
+                window.styleMask.insert(.fullSizeContentView)
+                window.titlebarSeparatorStyle = .none
+                
+                // Remove the titled style mask to make it borderless
+                window.styleMask.remove(.titled)
                 
                 // Custom titlebar appearance
                 window.titlebarAppearsTransparent = true
                 window.titleVisibility = .hidden
+                
+                // Hide traffic light buttons (close, minimize, zoom)
+                window.standardWindowButton(.closeButton)?.isHidden = true
+                window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+                window.standardWindowButton(.zoomButton)?.isHidden = true
             })
     }
 }
