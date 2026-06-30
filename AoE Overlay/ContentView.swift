@@ -105,8 +105,6 @@ struct ContentView: View {
             .background(Color.white.opacity(0.05))
             .cornerRadius(8)
             
-            Spacer(minLength: 0)
-            
             // Dynamic window opacity control
             VStack(spacing: 6) {
                 HStack {
@@ -130,7 +128,7 @@ struct ContentView: View {
             .cornerRadius(8)
         }
         .padding(18)
-        .frame(width: 320, height: 460)
+        .frame(width: 320)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(red: 0.08, green: 0.08, blue: 0.12).opacity(0.85))

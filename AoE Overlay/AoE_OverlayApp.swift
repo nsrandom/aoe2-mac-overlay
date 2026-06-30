@@ -65,12 +65,9 @@ struct AoE_OverlayApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(width: 320, height: 460)
                 .windowConfiguration()
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
     }
 }
-
-
