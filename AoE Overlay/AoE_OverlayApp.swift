@@ -42,6 +42,10 @@ struct WindowConfigurationModifier: ViewModifier {
                 // Allow dragging the window from any transparent background area
                 window.isMovableByWindowBackground = true
                 
+                // Always stay on top of other windows, including full-screen games/apps
+                window.level = .screenSaver
+                window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+                
                 // Apply the opacity setting
                 window.alphaValue = CGFloat(opacity)
                 
