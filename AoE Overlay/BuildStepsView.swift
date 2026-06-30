@@ -156,7 +156,7 @@ struct BuildStepRow: View {
 struct BuildStepsView_Previews: PreviewProvider {
     static var previews: some View {
         BuildStepsView(
-            buildOrder: BuildOrder.defaultBuildOrder,
+            buildOrder: BuildOrder.mockBuildOrder,
             currentStepIndex: 0
         )
         .padding()

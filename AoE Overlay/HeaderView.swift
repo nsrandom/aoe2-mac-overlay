@@ -11,7 +11,7 @@ import UniformTypeIdentifiers
 struct HeaderView: View {
     @Environment(\.openWindow) private var openWindow
     
-    let buildOrder: BuildOrder
+    let buildOrder: BuildOrder?
     @Binding var currentStepIndex: Int
     @Binding var showMatchup: Bool
     let onLoadBuildOrder: (BuildOrder) -> Void
@@ -68,8 +68,8 @@ struct HeaderView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(currentStepIndex == 0)
-                .opacity(currentStepIndex == 0 ? 0.35 : 1.0)
+                .disabled(buildOrder == nil || currentStepIndex == 0)
+                .opacity((buildOrder == nil || currentStepIndex == 0) ? 0.35 : 1.0)
                 
                 // Previous Step Button
                 Button(action: {
@@ -84,12 +84,12 @@ struct HeaderView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(currentStepIndex == 0)
-                .opacity(currentStepIndex == 0 ? 0.35 : 1.0)
+                .disabled(buildOrder == nil || currentStepIndex == 0)
+                .opacity((buildOrder == nil || currentStepIndex == 0) ? 0.35 : 1.0)
                 
                 // Next Step Button
                 Button(action: {
-                    if currentStepIndex < buildOrder.buildOrder.count {
+                    if let count = buildOrder?.buildOrder.count, currentStepIndex < count {
                         currentStepIndex += 1
                     }
                 }) {
@@ -100,8 +100,8 @@ struct HeaderView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(currentStepIndex == buildOrder.buildOrder.count)
-                .opacity(currentStepIndex == buildOrder.buildOrder.count ? 0.35 : 1.0)
+                .disabled(buildOrder == nil || currentStepIndex == (buildOrder?.buildOrder.count ?? 0))
+                .opacity((buildOrder == nil || currentStepIndex == (buildOrder?.buildOrder.count ?? 0)) ? 0.35 : 1.0)
             }
         }
         .padding(.horizontal, 4)
@@ -185,7 +185,7 @@ struct HeaderView: View {
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
         HeaderView(
-            buildOrder: BuildOrder.defaultBuildOrder,
+            buildOrder: BuildOrder.mockBuildOrder,
             currentStepIndex: .constant(0),
             showMatchup: .constant(true),
             onLoadBuildOrder: { _ in }

@@ -15,10 +15,10 @@ struct ContentView: View {
     let opponentCiv = "Britons"
     
     // AppStorage tracking for the last loaded build order name
-    @AppStorage("lastLoadedBuildOrder") private var lastLoadedBuildOrder: String = "fc-lancers.json"
+    @AppStorage("lastLoadedBuildOrder") private var lastLoadedBuildOrder: String = ""
     
     // Dynamic active build order state
-    @State private var buildOrder: BuildOrder = .defaultBuildOrder
+    @State private var buildOrder: BuildOrder? = nil
     @State private var currentStepIndex = 0
     @State private var showMatchup = false
     
@@ -47,22 +47,37 @@ struct ContentView: View {
                 )
             }
             
-            // Build Order Page Header (Civilization / Description)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(buildOrder.name)
-                    .font(.subheadline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .lineLimit(1)
+            if let buildOrder = buildOrder {
+                // Build Order Page Header (Civilization / Description)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(buildOrder.name)
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 4)
+                
+                // Checklist Area (Paging built in)
+                BuildStepsView(
+                    buildOrder: buildOrder,
+                    currentStepIndex: currentStepIndex
+                )
+            } else {
+                // Placeholder when no build order is loaded
+                VStack(spacing: 8) {
+                    Image(systemName: "doc.text.magnifyingglass")
+                        .font(.system(size: 24))
+                        .foregroundColor(.gray.opacity(0.6))
+                    
+                    Text("Load a build order to display here")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 40)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 4)
-            
-            // Checklist Area (Paging built in)
-            BuildStepsView(
-                buildOrder: buildOrder,
-                currentStepIndex: currentStepIndex
-            )
         }
         .padding(18)
         .frame(width: 320)
@@ -93,14 +108,14 @@ struct ContentView: View {
     }
     
     private func loadInitialBuildOrder() {
-        if lastLoadedBuildOrder == "fc-lancers.json" {
-            self.buildOrder = .defaultBuildOrder
+        guard !lastLoadedBuildOrder.isEmpty else {
+            self.buildOrder = nil
             return
         }
         
         let paths = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
         guard let appSupport = paths.first?.appendingPathComponent("com.nsrandom.AoE-Overlay") else {
-            self.buildOrder = .defaultBuildOrder
+            self.buildOrder = nil
             return
         }
         
@@ -112,8 +127,8 @@ struct ContentView: View {
             self.buildOrder = decoded
         } else {
             // Revert back if file path is missing or corrupted
-            self.lastLoadedBuildOrder = "fc-lancers.json"
-            self.buildOrder = .defaultBuildOrder
+            self.lastLoadedBuildOrder = ""
+            self.buildOrder = nil
         }
     }
 }
