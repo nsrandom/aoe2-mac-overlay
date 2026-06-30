@@ -9,13 +9,14 @@ import SwiftUI
 import AppKit
 
 struct WindowAccessor: NSViewRepresentable {
-    var onChange: (NSWindow) -> Void
+    let opacity: Double
+    var onChange: (NSWindow, Double) -> Void
 
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
             if let window = view.window {
-                onChange(window)
+                onChange(window, opacity)
             }
         }
         return view
@@ -23,7 +24,7 @@ struct WindowAccessor: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {
         if let window = nsView.window {
-            onChange(window)
+            onChange(window, opacity)
         }
     }
 }
@@ -33,7 +34,7 @@ struct WindowConfigurationModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .background(WindowAccessor { window in
+            .background(WindowAccessor(opacity: windowOpacity) { window, opacity in
                 // Set the window background behavior
                 window.isOpaque = false
                 window.backgroundColor = .clear
@@ -41,8 +42,8 @@ struct WindowConfigurationModifier: ViewModifier {
                 // Allow dragging the window from any transparent background area
                 window.isMovableByWindowBackground = true
                 
-                // Apply the opacity setting (defaults to 0.5)
-                window.alphaValue = CGFloat(windowOpacity)
+                // Apply the opacity setting
+                window.alphaValue = CGFloat(opacity)
                 
                 // Enable shadow for the custom window shape
                 window.hasShadow = false
@@ -80,6 +81,11 @@ struct AoE_OverlayApp: App {
                 .windowConfiguration()
         }
         .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+        
+        Window("Settings", id: "settings") {
+            SettingsView()
+        }
         .windowResizability(.contentSize)
     }
 }

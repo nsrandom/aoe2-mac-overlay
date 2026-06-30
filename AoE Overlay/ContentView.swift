@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @AppStorage("windowOpacity") private var windowOpacity: Double = 0.5
-    
     // Hardcoded tactical data for demonstration
     let activeCiv = "Mongols"
     let playerElo = 1450
@@ -86,28 +84,6 @@ struct ContentView: View {
                         isCurrent: index == currentStepIndex
                     )
                 }
-            }
-            .padding(10)
-            .background(Color.white.opacity(0.05))
-            .cornerRadius(8)
-            
-            // Dynamic window opacity control
-            VStack(spacing: 6) {
-                HStack {
-                    Image(systemName: "circle.lefthalf.filled")
-                        .foregroundColor(.gray)
-                    Text("Window Opacity")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                    Spacer()
-                    Text("\(Int(windowOpacity * 100))%")
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                }
-                
-                Slider(value: $windowOpacity, in: 0.1...1.0)
-                    .tint(Color(red: 0.85, green: 0.65, blue: 0.2))
             }
             .padding(10)
             .background(Color.white.opacity(0.05))

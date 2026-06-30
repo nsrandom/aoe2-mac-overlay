@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HeaderView: View {
+    @Environment(\.openWindow) private var openWindow
+    
     let buildSteps: [String]
     @Binding var currentStepIndex: Int
     
@@ -26,7 +28,7 @@ struct HeaderView: View {
                 .buttonStyle(.plain)
                 
                 Button(action: {
-                    // Settings action placeholder
+                    openWindow(id: "settings")
                 }) {
                     Image(systemName: "gearshape")
                         .font(.system(size: Theme.iconButtonSize, weight: .bold))
