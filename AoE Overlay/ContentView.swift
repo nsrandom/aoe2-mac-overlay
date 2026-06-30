@@ -16,36 +16,19 @@ struct ContentView: View {
     let opponentElo = 1420
     let opponentCiv = "Britons"
     
+    // Build steps and navigation tracking
+    let buildSteps = [
+        "6 Villagers to Sheep",
+        "4 Villagers to Wood",
+        "Loom researched",
+        "Click up to Imperial Age"
+    ]
+    @State private var currentStepIndex = 3 // Starting step for demonstration
+    
     var body: some View {
         VStack(spacing: 16) {
             // Header Bar
-            HStack {
-                Image(systemName: "shield.fill")
-                    .foregroundColor(Color(red: 0.85, green: 0.65, blue: 0.2)) // Gold
-                    .font(.system(size: 20))
-                
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("AoE II Overlay")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                    Text("Arabia Match Active")
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                }
-                
-                Spacer()
-                
-                // Status/Phase indicator
-                Text("Castle Age")
-                    .font(.system(size: 10, weight: .bold))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color(red: 0.85, green: 0.65, blue: 0.2).opacity(0.2))
-                    .foregroundColor(Color(red: 0.85, green: 0.65, blue: 0.2))
-                    .cornerRadius(6)
-            }
-            .padding(.horizontal, 4)
+            HeaderView(buildSteps: buildSteps, currentStepIndex: $currentStepIndex)
             
             Divider()
                 .background(Color.white.opacity(0.15))
@@ -96,10 +79,13 @@ struct ContentView: View {
                     .foregroundColor(Color(red: 0.85, green: 0.65, blue: 0.2))
                     .textCase(.uppercase)
                 
-                BuildStepView(title: "6 Villagers to Sheep", isDone: true)
-                BuildStepView(title: "4 Villagers to Wood", isDone: true)
-                BuildStepView(title: "Loom researched", isDone: true)
-                BuildStepView(title: "Next: Click up to Imperial Age", isDone: false, isCurrent: true)
+                ForEach(0..<buildSteps.count, id: \.self) { index in
+                    BuildStepView(
+                        title: buildSteps[index],
+                        isDone: index < currentStepIndex,
+                        isCurrent: index == currentStepIndex
+                    )
+                }
             }
             .padding(10)
             .background(Color.white.opacity(0.05))
@@ -161,8 +147,8 @@ struct BuildStepView: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: isDone ? "checkmark.circle.fill" : (isCurrent ? "arrow.right.circle.fill" : "circle"))
-                .foregroundColor(isDone ? Color.green : (isCurrent ? Color(red: 0.85, green: 0.65, blue: 0.2) : Color.gray))
-                .font(.system(size: 14))
+                .foregroundColor(isDone ? Color.green : (isCurrent ? Theme.primaryGold : Color.gray))
+                .font(.system(size: Theme.buildStepIconSize))
             
             Text(title)
                 .font(.caption)
