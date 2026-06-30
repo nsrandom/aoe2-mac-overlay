@@ -20,7 +20,7 @@ struct ContentView: View {
     // Dynamic active build order state
     @State private var buildOrder: BuildOrder = .defaultBuildOrder
     @State private var currentStepIndex = 0
-    @State private var showMatchup = true
+    @State private var showMatchup = false
     
     var body: some View {
         VStack(spacing: 16) {
@@ -54,21 +54,6 @@ struct ContentView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .lineLimit(1)
-                
-                HStack(spacing: 4) {
-                    Text("Civ: \(buildOrder.civilization)")
-                        .font(.caption2)
-                        .foregroundColor(Theme.primaryGold)
-                    
-                    Text("•")
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                    
-                    Text("By \(buildOrder.author)")
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
-                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 4)
