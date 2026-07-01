@@ -1,10 +1,3 @@
-//
-//  MatchupView.swift
-//  AoE Overlay
-//
-//  Created by Antigravity on 6/30/26.
-//
-
 import SwiftUI
 
 struct MatchupView: View {

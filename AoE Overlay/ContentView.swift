@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  AoE Overlay
-//
-//  Created by Asif Sheikh on 6/29/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
