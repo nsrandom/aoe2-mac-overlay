@@ -1,10 +1,3 @@
-//
-//  HeaderView.swift
-//  AoE Overlay
-//
-//  Created by Antigravity on 6/30/26.
-//
-
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -15,6 +8,24 @@ struct HeaderView: View {
     @Binding var currentStepIndex: Int
     @Binding var showMatchup: Bool
     let onLoadBuildOrder: (BuildOrder) -> Void
+    
+    @AppStorage("maxStepsPerPage") private var maxStepsPerPage: Int = 5
+    
+    private var pages: [[BuildOrderStep]] {
+        guard let buildOrder = buildOrder else { return [] }
+        return buildOrder.computePages(maxPerPage: maxStepsPerPage)
+    }
+    
+    private var activePageIndex: Int {
+        guard let buildOrder = buildOrder, currentStepIndex < buildOrder.buildOrder.count else { return 0 }
+        let activeStep = buildOrder.buildOrder[currentStepIndex]
+        for (index, page) in pages.enumerated() {
+            if page.contains(where: { $0.id == activeStep.id }) {
+                return index
+            }
+        }
+        return 0
+    }
     
     var body: some View {
         HStack {
@@ -68,13 +79,16 @@ struct HeaderView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(buildOrder == nil || currentStepIndex == 0)
-                .opacity((buildOrder == nil || currentStepIndex == 0) ? 0.35 : 1.0)
+                .disabled(buildOrder == nil || activePageIndex == 0)
+                .opacity((buildOrder == nil || activePageIndex == 0) ? 0.35 : 1.0)
                 
-                // Previous Step Button
+                // Previous Step Button (Moves to previous page)
                 Button(action: {
-                    if currentStepIndex > 0 {
-                        currentStepIndex -= 1
+                    let index = activePageIndex
+                    if index > 0, let targetStep = pages[index - 1].first {
+                        if let targetIndex = buildOrder?.buildOrder.firstIndex(where: { $0.id == targetStep.id }) {
+                            currentStepIndex = targetIndex
+                        }
                     }
                 }) {
                     Image(systemName: "chevron.left")
@@ -84,13 +98,16 @@ struct HeaderView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(buildOrder == nil || currentStepIndex == 0)
-                .opacity((buildOrder == nil || currentStepIndex == 0) ? 0.35 : 1.0)
+                .disabled(buildOrder == nil || activePageIndex == 0)
+                .opacity((buildOrder == nil || activePageIndex == 0) ? 0.35 : 1.0)
                 
-                // Next Step Button
+                // Next Step Button (Moves to next page)
                 Button(action: {
-                    if let count = buildOrder?.buildOrder.count, currentStepIndex < count {
-                        currentStepIndex += 1
+                    let index = activePageIndex
+                    if index < pages.count - 1, let targetStep = pages[index + 1].first {
+                        if let targetIndex = buildOrder?.buildOrder.firstIndex(where: { $0.id == targetStep.id }) {
+                            currentStepIndex = targetIndex
+                        }
                     }
                 }) {
                     Image(systemName: "chevron.right")
@@ -100,8 +117,8 @@ struct HeaderView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .disabled(buildOrder == nil || currentStepIndex == (buildOrder?.buildOrder.count ?? 0))
-                .opacity((buildOrder == nil || currentStepIndex == (buildOrder?.buildOrder.count ?? 0)) ? 0.35 : 1.0)
+                .disabled(buildOrder == nil || pages.isEmpty || activePageIndex >= pages.count - 1)
+                .opacity((buildOrder == nil || pages.isEmpty || activePageIndex >= pages.count - 1) ? 0.35 : 1.0)
             }
         }
         .padding(.horizontal, 4)
