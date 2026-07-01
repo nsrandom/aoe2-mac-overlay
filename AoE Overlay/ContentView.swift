@@ -47,37 +47,11 @@ struct ContentView: View {
                 )
             }
             
-            if let buildOrder = buildOrder {
-                // Build Order Page Header (Civilization / Description)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(buildOrder.name)
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 4)
-                
-                // Checklist Area (Paging built in)
-                BuildStepsView(
-                    buildOrder: buildOrder,
-                    currentStepIndex: currentStepIndex
-                )
-            } else {
-                // Placeholder when no build order is loaded
-                VStack(spacing: 8) {
-                    Image(systemName: "doc.text.magnifyingglass")
-                        .font(.system(size: 24))
-                        .foregroundColor(.gray.opacity(0.6))
-                    
-                    Text("Load a build order to display here")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.vertical, 40)
-            }
+            // Build order steps checklist or placeholder view
+            BuildOrderView(
+                buildOrder: buildOrder,
+                currentStepIndex: currentStepIndex
+            )
         }
         .padding(18)
         .frame(width: 320)

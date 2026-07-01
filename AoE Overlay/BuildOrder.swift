@@ -76,7 +76,8 @@ extension BuildOrder {
         }
         return pages
     }
-    
+}
+
 #if DEBUG
 extension BuildOrder {
     /// A mockup build order loaded from the static raw JSON template for SwiftUI Previews.
