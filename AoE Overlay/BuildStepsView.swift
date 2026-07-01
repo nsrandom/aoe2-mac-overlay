@@ -37,20 +37,26 @@ struct BuildStepsView: View {
             } else {
                 let activePageSteps = pages[pageIndex]
                 
-                // Render Page Resource Assignments header
-                if let lastStep = activePageSteps.last {
-                    let resources = lastStep.resources
-                    let builders = max(0, lastStep.villagerCount - (resources.food + resources.wood + resources.gold + resources.stone))
-                    
-                    ResourceGridView(resources: resources, builders: builders)
-                        .padding(.vertical, 2)
-                }
-                
                 // Steps List
                 VStack(spacing: 8) {
                     ForEach(activePageSteps) { step in
                         BuildStepRow(step: step)
                     }
+                }
+                
+                // Render Page Resource Assignments after steps
+                if let lastStep = activePageSteps.last {
+                    let resources = lastStep.resources
+                    let builders = max(0, lastStep.villagerCount - (resources.food + resources.wood + resources.gold + resources.stone))
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Target Vils:")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.gray)
+                        ResourceGridView(resources: resources, builders: builders)
+                    }
+                    .padding(.top, 6)
                 }
             }
         }
